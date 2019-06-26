@@ -1,3 +1,5 @@
+// Running this as a macro to test its functionality
+
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TH1.h>
@@ -14,7 +16,7 @@ void Analysis_VFATEfficiencyTable(int run_num){
   int row_count = 0;
   float data;
 
-  TH1F *VFATEfficiencyTable = new TH1F("VFATEfficiencyTable","No. of VFATs vs Efficiency",100,0,100);
+  TH1F *VFATEfficiencyTable = new TH1F("VFATEfficiencyTable","No. of VFATs vs Efficiency",100,0,1);
   dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_VFATEfficiencyTable_run" + to_string(run_num) + ".csv";
   fin.open(dir);
 
@@ -34,4 +36,5 @@ void Analysis_VFATEfficiencyTable(int run_num){
     }
   }
   fin.close();
+  VFATEfficiencyTable->Draw();
 }
