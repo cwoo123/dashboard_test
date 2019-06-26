@@ -1,0 +1,7 @@
+/Users/cy/Atom test/test2.cc:19:3: error: use of undeclared identifier 'name'
+  name = ch_ID.at(i);
+  ^
+/Users/cy/Atom test/test2.cc:20:6: error: use of undeclared identifier 'name'
+  if(name != ch_ID.at(i-1)){
+     ^
+2 errors generated.
