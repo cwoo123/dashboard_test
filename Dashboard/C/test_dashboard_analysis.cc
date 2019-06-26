@@ -15,7 +15,7 @@ void Analysis_FastEfficiencyTable(int run_num){
   float data;
 
   TH1 *FastEfficiencyTable = new TH1F("FastEfficiencyTable","No. of Chambers vs Efficiency",100,0,100); // efficiency distribution
-  dir = "QC8Test/src/Analysis/GEMQC8/data/FastEfficiencyTables/FastEfficiencyTable_run" + to_string(run_num) + ".csv";
+  dir = "dashboard_test/Dashboard/Data/CSVs/FastEfficiencyTable_run" + to_string(run_num) + ".csv";
   fin.open(dir);
 
   while(getline(fin, line)){
@@ -44,7 +44,7 @@ void Analysis_VFATEfficiencyTable(int run_num){
   float data;
 
   TH1 *VFATEfficiencyTable = new TH1F("VFATEfficiencyTable","No. of VFATs vs Efficiency",100,0,100);
-  dir = "QC8Test/src/Analysis/GEMQC8/data/VFATEfficiencyTables/VFATEfficiencyTable_run" + to_string(run_num) + ".csv";
+  dir = "dashboard_test/Dashboard/Data/CSVs/VFATEfficiencyTable_run" + to_string(run_num) + ".csv";
   fin.open(dir);
 
   while(getline(fin, line)){
@@ -74,7 +74,7 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
   vector<string> ch_ID, replic;
 
   TH1 *HotStripsTable = new TH1F("HotStripsTable","No. of Chambers vs Number of Hot Strips",10,1,15);
-  dir = "QC8Test/src/Analysis/GEMQC8/data/HotStripsTables/HotStrips_run" + to_string(run_num) + ".csv";
+  dir = "dashboard_test/Dashboard/Data/CSVs/HotStrips_run" + to_string(run_num) + ".csv";
   fin.open(dir);
 
   while(getline(fin, line)){
