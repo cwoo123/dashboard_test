@@ -9,7 +9,7 @@
 #include <TH1.h>
 #include "test_dashboard_analysis.h"
 
-void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
+void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
 
   ifstream fin;
   string dir, line, entry, name;
@@ -17,8 +17,8 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
   int ch_count = -900;
   vector<string> ch_ID, replic;
 
-  TH1F *HotStripsTable = new TH1F("HotStripsTable","No. of Chambers vs Number of Hot Strips",15,1,15);
-  dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_HotStrips_run" + to_string(run_num) + ".csv";
+  TH1F *DeadStripsTable = new TH1F("DeadStripsTable","No. of Chambers vs Number of Dead Strips",15,1,15);
+  dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_DeadStrips_run" + to_string(run_num) + ".csv";
   fin.open(dir);
 
   while(getline(fin, line)){
@@ -42,9 +42,9 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
     name = ch_ID.at(i);
     if( count(replic.begin(), replic.end(), name) > 1 ) // if replic has > 1 instance of "name", next iteration.
       continue;
-    ch_count = count(ch_ID.begin(), ch_ID.end(), name); // no. of time chamber name appears = no. of hot strips in chamber
-    HotStripsTable->Fill(ch_count);
+    ch_count = count(ch_ID.begin(), ch_ID.end(), name); // no. of time chamber name appears = no. of dead strips in chamber
+    DeadStripsTable->Fill(ch_count);
 
     }
-    HotStripsTable->Draw();
+    DeadStripsTable->Draw();
 }
