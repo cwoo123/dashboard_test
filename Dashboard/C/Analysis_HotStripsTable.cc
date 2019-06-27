@@ -44,7 +44,7 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
       continue;
     ch_count = count(ch_ID.begin(), ch_ID.end(), name); // no. of time chamber name appears = no. of hot strips in chamber
     HotStripsTable->Fill(ch_count);
-
     }
+    TCanvas *c3=new TCanvas();
     HotStripsTable->Draw();
 }

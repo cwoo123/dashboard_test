@@ -42,9 +42,9 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     name = ch_ID.at(i);
     if( count(replic.begin(), replic.end(), name) > 1 ) // if replic has > 1 instance of "name", next iteration.
       continue;
-    ch_count = count(ch_ID.begin(), ch_ID.end(), name); // no. of time chamber name appears = no. of dead strips in chamber
+    ch_count = count(ch_ID.begin(), ch_ID.end(), name); // no. of time chamber name appears = no. of Dead strips in chamber
     DeadStripsTable->Fill(ch_count);
-
     }
+    TCanvas *c4=new TCanvas();
     DeadStripsTable->Draw();
 }

@@ -21,7 +21,6 @@ void Analysis_FastEfficiencyTable(int run_num){
   TH1F *FastEfficiencyTable = new TH1F("FastEfficiencyTable","No. of Chambers vs Efficiency",100,0,100); // efficiency distribution
   dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_FastEfficiencyTable_run" + to_string(run_num) + ".csv";
   fin.open(dir);
-
   while(getline(fin, line)){
     int column_count = 0;
     row_count+=1;
@@ -38,5 +37,6 @@ void Analysis_FastEfficiencyTable(int run_num){
     }
   }
   fin.close();
- FastEfficiencyTable->Draw();
+  TCanvas *c1=new TCanvas();
+  FastEfficiencyTable->Draw();
 }
