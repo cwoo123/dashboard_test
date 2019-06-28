@@ -128,6 +128,48 @@ def AnalyseFastEfficiencyTable(run_num):
     efficiency.communicate()
     time.sleep(1)
 
+def AnalyseVFATEfficiencyTable(run_num):
+    getVFATTable(run_num)
+    runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
+    effCommand = "root -l -q " + runPath + "Analysis_VFATEfficiencyTable.cc(" + run_num + ")"
+    efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
+    while efficiency.poll() is None:
+        line = efficiency.stdout.readline()
+        print(line)
+    print efficiency.stdout.read()
+    efficiency.communicate()
+    time.sleep(1)
+
+def AnalyseHotStripsTable(run_num):
+    getHotStripsTable(run_num)
+    runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
+    effCommand = "root -l -q " + runPath + "Analysis_HotStripsTable.cc(" + run_num + ")"
+    efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
+    while efficiency.poll() is None:
+        line = efficiency.stdout.readline()
+        print(line)
+    print efficiency.stdout.read()
+    efficiency.communicate()
+    time.sleep(1)
+
+def AnalyseDeadStripsTable(run_num):
+    getHotStripsTable(run_num)
+    runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
+    effCommand = "root -l -q " + runPath + "Analysis_DeadStripsTable.cc(" + run_num + ")"
+    efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
+    while efficiency.poll() is None:
+        line = efficiency.stdout.readline()
+        print(line)
+    print efficiency.stdout.read()
+    efficiency.communicate()
+    time.sleep(1)
+
+def AnalyseAll(run_num):
+    AnalyseFastEfficiencyTable(run_num)
+    AnalyseVFATEfficiencyTable(run_num)
+    AnalyseHotStripsTable(run_num)
+    AnalyseDeadStripsTable(run_num)
+
 if __name__ == '__main__':
     runNumber = sys.argv[1]
     tableType = sys.argv[2]
@@ -141,5 +183,14 @@ if __name__ == '__main__':
         getDeadStripsTable(runNumber)
     elif tableType == "AnalyseFastEfficiencyTable":
         AnalyseFastEfficiencyTable(runNumber)
+    elif tableType == "AnalyseVFATEfficiencyTable":
+        AnalyseVFATEfficiencyTable(runNumber)
+    elif tableType == "AnalyseHotStripsTable":
+        AnalyseHotStripsTable(runNumber)
+    elif tableType == "AnalyseDeadStripsTable":
+        AnalyseDeadStripsTable(runNumber)
+    elif tableType == "AnalyseAll":
+        print "Analysing FastEff, VFATEff, HotStrips, DeadStrips"
+        AnalyseAll(runNumber)
     else:
         print "Wrong name for a table!"
