@@ -1,7 +1,7 @@
 # remove test
 
 import cx_Oracle
-import os, sys, io
+import os, sys, io, subprocess, time
 
 def getFastEfficiencyTable(run_num):
     print "\nDownloading FastEfficiencyTable for run {0}".format(run_num)
@@ -12,7 +12,7 @@ def getFastEfficiencyTable(run_num):
     query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_QUICK_EFFICIENCY_V_RH where RUN_NUMBER="+str(run_num) # ???
     cur.execute(query)
 
-    configTablesPath = os.path.abspath("dumpDBtables.py").split('QC8Test')[0] + 'QC8Test/src/Analysis/GEMQC8/data/FastEfficiencyTables/' #???
+    configTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/' #???
     outfile_name = configTablesPath + "Test_FastEfficiencyTable_run{0}.csv".format(run_num) # ???
 
     with open(outfile_name,"w+") as outfile:
@@ -37,7 +37,7 @@ def getVFATTable(run_num):
     query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_CH_VFAT_EFF_VIEW_RH where RUN_NUMBER="+str(run_num) # ???
     cur.execute(query)
 
-    configTablesPath = os.path.abspath("dumpDBtables.py").split('QC8Test')[0] + 'QC8Test/src/Analysis/GEMQC8/data/VFATEfficiencyTables/' #???
+    configTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/' #???
     outfile_name = configTablesPath + "Test_VFATEfficiencyTable_run{0}.csv".format(run_num) # ???
 
     with open(outfile_name,"w+") as outfile:
@@ -69,7 +69,7 @@ def getHotStripsTable(run_num):
     query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_HOT_V_RH where RUN_NUMBER="+str(run_num)
     cur.execute(query)
 
-    hotStripsTablesPath = os.path.abspath("dumpDBtables.py").split('QC8Test')[0] + 'QC8Test/src/Analysis/GEMQC8/data/HotStripsTables/'
+    hotStripsTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/'
     outfile_name = hotStripsTablesPath + "Test_HotStrips_run{0}.csv".format(run_num)
 
     with open(outfile_name,"w+") as outfile:
@@ -97,7 +97,7 @@ def getDeadStripsTable(run_num):
     query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_DEAD_RH where RUN_NUMBER="+str(run_num)
     cur.execute(query)
 
-    deadStripsTablesPath = os.path.abspath("dumpDBtables.py").split('QC8Test')[0] + 'QC8Test/src/Analysis/GEMQC8/data/DeadStripsTables/'
+    deadStripsTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/'
     outfile_name = deadStripsTablesPath + "Test_DeadStrips_run{0}.csv".format(run_num)
 
     with open(outfile_name,"w+") as outfile:
@@ -116,11 +116,10 @@ def getDeadStripsTable(run_num):
 
     print "\nSuccesfully done!\n"
 
-
-def Analyse_FastEfficiencyTable(run_num):
+def AnalyseFastEfficiencyTable(run_num):
     getFastEfficiencyTable(run_num)
-    runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C"
-    effCommand = "root -l -q " + runPath + "Analysis_FastEfficiencyTable.cc(" + run_number + "\")"
+    runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
+    effCommand = "root -l -q " + runPath + "Analysis_FastEfficiencyTable.cc(" + run_num + ")"
     efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
     while efficiency.poll() is None:
         line = efficiency.stdout.readline()
@@ -129,7 +128,6 @@ def Analyse_FastEfficiencyTable(run_num):
     efficiency.communicate()
     time.sleep(1)
 
-## command line
 if __name__ == '__main__':
     runNumber = sys.argv[1]
     tableType = sys.argv[2]
@@ -141,7 +139,7 @@ if __name__ == '__main__':
         getHotStripsTable(runNumber)
     elif tableType == "DeadStripsTable":
         getDeadStripsTable(runNumber)
-    elif tableType == "Analyse_FastEfficiencyTable":
-        Analyse_FastEfficiencyTable(runNumber)
+    elif tableType == "AnalyseFastEfficiencyTable":
+        AnalyseFastEfficiencyTable(runNumber)
     else:
         print "Wrong name for a table!"
