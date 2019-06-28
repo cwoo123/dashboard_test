@@ -1,4 +1,5 @@
-// Summary plots of VFAT efficiency
+// test saving histo to root file
+
 
 #include <fstream>
 #include <string>
@@ -23,6 +24,8 @@ void Analysis_VFATEfficiencyTable(int run_num){
   char *chamber = new char[100]; // for histo names
   char *description = new char[100]; // human readable name to the histograms
 
+  string outfile = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/Roots/VFATEfficiencyTable_run" + to_string(run_num) +".root";
+  TFile f(outfile.c_str(), "NEW");
 
   TH1F *VFATEfficiencyTable = new TH1F("VFATEfficiencyTable","No. of VFATs vs Efficiency",10000,0,1);
   dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_VFATEfficiencyTable_run" + to_string(run_num) + ".csv";
@@ -92,11 +95,12 @@ void Analysis_VFATEfficiencyTable(int run_num){
     }
 
     fin.close();
-    TCanvas *c1 = new TCanvas();
-    v[i]->Draw();
+    v[i]->Write(chamber);
     fin.open(dir);  // re-open
     row_count=0; // reset row_count
   }
-  TCanvas *c1=new TCanvas();
-  VFATEfficiencyTable->Draw();
+
+  VFATEfficiencyTable->Write("VFATEfficiencyTable");
+  f.Close();
+  cout<<"VFATEfficiencyTable_run" + to_string(run_num) +".root created."<<endl;
 }

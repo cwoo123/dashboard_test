@@ -1,4 +1,4 @@
-// Running this as a macro to test its functionality
+// test saving histo to root file
 
 #include <TFile.h>
 #include <TCanvas.h>
@@ -17,6 +17,9 @@ void Analysis_FastEfficiencyTable(int run_num){
   string dir, line, entry;
   int row_count = 0;
   float data;
+
+  string outfile = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/Roots/FastEfficiencyTable_run" + to_string(run_num) +".root";
+  TFile f(outfile.c_str(), "NEW");
 
   TH1F *FastEfficiencyTable = new TH1F("FastEfficiencyTable","No. of Chambers vs Efficiency",100,0,100); // efficiency distribution
   dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_FastEfficiencyTable_run" + to_string(run_num) + ".csv";
@@ -37,6 +40,7 @@ void Analysis_FastEfficiencyTable(int run_num){
     }
   }
   fin.close();
-  TCanvas *c1=new TCanvas();
-  FastEfficiencyTable->Draw();
+  FastEfficiencyTable->Write("FastEfficiencyTable");
+  f.Close();
+  cout<<"FastEfficiencyTable_run" + to_string(run_num) +".root created."<<endl;
 }

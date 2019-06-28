@@ -24,6 +24,9 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
   string ch_name;
   int data;
 
+  string outfile = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/Roots/HotStripsTable_run" + to_string(run_num) +".root";
+  TFile f(outfile.c_str(), "NEW");
+
   TH1F *HotStripsTable = new TH1F("HotStripsTable","No. of Chambers vs Number of Hot Strips",15,0.5,15.5);
   dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_HotStrips_run" + to_string(run_num) + ".csv";
   fin.open(dir);
@@ -56,9 +59,8 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
     ch_count = count(ch_ID.begin(), ch_ID.end(), name); // no. of time chamber name appears = no. of hot strips in chamber
     HotStripsTable->Fill(ch_count);
     }
-    TCanvas *c3=new TCanvas();
-    HotStripsTable->Draw();
 
+    HotStripsTable->Write("HotStripsTable");
 
   // create and fill eta histograms for each chamber
   fin.open(dir);
@@ -97,10 +99,10 @@ void Analysis_HotStripsTable(int run_num){ // test before adding analysis_dead
     }
 
     fin.close();
-    TCanvas *c1 = new TCanvas();
-    h[i]->Draw();
+    h[i]->Write(chamber);
     fin.open(dir);  // re-open
     row_count=0; // reset row_count
   }
-
+  f.Close();
+  cout<<"HotStripsTable_run" + to_string(run_num) +".root created."<<endl;
 }
