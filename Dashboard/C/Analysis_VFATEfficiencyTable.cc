@@ -19,7 +19,7 @@ void Analysis_VFATEfficiencyTable(int run_num){
   int row_count = 0;
   float data;
   string ch_name, name;
-  TH1F *h[15]; // declare 15 element array for each s-chamber histo
+  TH1F *v[15]; // declare 15 element array for each s-chamber histo
   char *chamber = new char[100]; // for histo names
   char *description = new char[100]; // human readable name to the histograms
 
@@ -57,7 +57,7 @@ void Analysis_VFATEfficiencyTable(int run_num){
   for(int i = 0; i<replic.size(); i++ ){
     strcpy(chamber, replic.at(i).c_str());
     strcpy(description, (replic.at(i) + ": No. VFAT vs Efficiency").c_str());
-    h[i] = new TH1F(chamber, description, 10000, 0, 1);
+    v[i] = new TH1F(chamber, description, 10000, 0, 1);
 
     while(getline(fin, line)){
       int column_count = 0;
@@ -85,7 +85,7 @@ void Analysis_VFATEfficiencyTable(int run_num){
           }
           if(ch_name==replic.at(i)){
             data = stof(entry);
-            h[i]->Fill(data); // fills this chamber specific histo only if entry is also == replic[i]
+            v[i]->Fill(data); // fills this chamber specific histo only if entry is also == replic[i]
           }
         }
       }
@@ -93,7 +93,7 @@ void Analysis_VFATEfficiencyTable(int run_num){
 
     fin.close();
     TCanvas *c1 = new TCanvas();
-    h[i]->Draw();
+    v[i]->Draw();
     fin.open(dir);  // re-open
     row_count=0; // reset row_count
   }

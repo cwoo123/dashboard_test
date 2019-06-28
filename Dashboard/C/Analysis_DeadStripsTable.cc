@@ -18,7 +18,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
   int row_count = 0;
   int ch_count = -900;
   vector<string> ch_ID, replic;
-  TH1F *h[15]; // declare 15 element array for each s-chamber histo
+  TH1F *d[15]; // declare 15 element array for each s-chamber histo
   char *chamber = new char[100]; // for histo names
   char *description = new char[100]; // human readable name to the histograms
   string ch_name;
@@ -65,7 +65,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
   for(int i = 0; i<replic.size(); i++ ){
     strcpy(chamber, replic.at(i).c_str());
     strcpy(description, (replic.at(i) + ": Number of Dead Strips per Eta").c_str());
-    h[i] = new TH1F(chamber, description, 8, 0.5, 8.5);
+    d[i] = new TH1F(chamber, description, 8, 0.5, 8.5);
 
     while(getline(fin, line)){
       int column_count = 0;
@@ -90,7 +90,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
           if(ch_name==replic.at(i)){ // if row corresponds to chamber, read data
             data = stoi(entry);
             data = 8-data%8; // obtain eta_ID
-            h[i]->Fill(data); // fill with eta_IDs
+            d[i]->Fill(data); // fill with eta_IDs
           }
         }
       }
@@ -98,7 +98,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
 
     fin.close();
     TCanvas *c1 = new TCanvas();
-    h[i]->Draw();
+    d[i]->Draw();
     fin.open(dir);  // re-open
     row_count=0; // reset row_count
   }
