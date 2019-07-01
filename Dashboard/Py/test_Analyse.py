@@ -12,7 +12,7 @@ def getFastEfficiencyTable(run_num):
     query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_QUICK_EFFICIENCY_V_RH where RUN_NUMBER="+str(run_num) # ???
     cur.execute(query)
 
-    configTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/' #???
+    configTablesPath = os.path.abspath("test_Analyse.py").split('Py')[0] + '/Data/CSVs/' #???
     outfile_name = configTablesPath + "Test_FastEfficiencyTable_run{0}.csv".format(run_num) # ???
 
     with open(outfile_name,"w+") as outfile:
@@ -37,7 +37,7 @@ def getVFATTable(run_num):
     query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_CH_VFAT_EFF_VIEW_RH where RUN_NUMBER="+str(run_num) # ???
     cur.execute(query)
 
-    configTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/' #???
+    configTablesPath = os.path.abspath("test_Analyse.py").split('Py')[0] + '/Data/CSVs/' #???
     outfile_name = configTablesPath + "Test_VFATEfficiencyTable_run{0}.csv".format(run_num) # ???
 
     with open(outfile_name,"w+") as outfile:
@@ -61,60 +61,119 @@ def getVFATTable(run_num):
     print "\nSuccesfully done!\n"
 
 def getHotStripsTable(run_num):
-    print "\nDownloading HotStripsTable for run {0}".format(run_num)
 
-    db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
-    cur = db.cursor()
+    if run_num=="a":
+        print "\nDownloading HotStripsTable for all runs"
 
-    query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_HOT_V_RH where RUN_NUMBER="+str(run_num)
-    cur.execute(query)
+        db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
+        cur = db.cursor()
 
-    hotStripsTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/'
-    outfile_name = hotStripsTablesPath + "Test_HotStrips_run{0}.csv".format(run_num)
+        query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_HOT_V_RH"
+        cur.execute(query)
 
-    with open(outfile_name,"w+") as outfile:
-        line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
-        outfile.write(line)
-        for result in cur:
-            chamber_name = result[0]
-            gem_num      = result[1]
-            position     = result[2]
-            vfat         = result[3]
-            channel      = result[4]
-            strip        = result[5]
-            run_number   = result[6]
-            line = str(chamber_name) + "," + str(gem_num) + "," + str(position) + "," + str(vfat) + "," + str(channel) + "," + str(strip) + "," + str(run_number) + "\n"
+        hotStripsTablesPath = os.path.abspath("test_Analyse.py").split('Py')[0] + '/Data/CSVs/'
+        outfile_name = hotStripsTablesPath + "Test_HotStrips_allruns.csv"
+
+        with open(outfile_name,"w+") as outfile:
+            line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
             outfile.write(line)
+            for result in cur:
+                chamber_name = result[0]
+                gem_num      = result[1]
+                position     = result[2]
+                vfat         = result[3]
+                channel      = result[4]
+                strip        = result[5]
+                run_number   = result[6]
+                line = str(chamber_name) + "," + str(gem_num) + "," + str(position) + "," + str(vfat) + "," + str(channel) + "," + str(strip) + "," + str(run_number) + "\n"
+                outfile.write(line)
 
-    print "\nSuccesfully done!\n"
+        print "\nSuccesfully done!\n"
+    else:
+        print "\nDownloading HotStripsTable for run {0}".format(run_num)
+
+        db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
+        cur = db.cursor()
+
+        query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_HOT_V_RH where RUN_NUMBER="+str(run_num)
+        cur.execute(query)
+
+        hotStripsTablesPath = os.path.abspath("test_Analyse.py").split('Py')[0] + '/Data/CSVs/'
+        outfile_name = hotStripsTablesPath + "Test_HotStrips_run{0}.csv".format(run_num)
+
+        with open(outfile_name,"w+") as outfile:
+            line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
+            outfile.write(line)
+            for result in cur:
+                chamber_name = result[0]
+                gem_num      = result[1]
+                position     = result[2]
+                vfat         = result[3]
+                channel      = result[4]
+                strip        = result[5]
+                run_number   = result[6]
+                line = str(chamber_name) + "," + str(gem_num) + "," + str(position) + "," + str(vfat) + "," + str(channel) + "," + str(strip) + "," + str(run_number) + "\n"
+                outfile.write(line)
+
+        print "\nSuccesfully done!\n"
 
 def getDeadStripsTable(run_num):
-    print "\nDownloading DeadStripsTable for run {0}".format(run_num)
+    if run_num=="a":
+        print "\nDownloading DeadStripsTable for all runs"
 
-    db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
-    cur = db.cursor()
+        db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
+        cur = db.cursor()
 
-    query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_DEAD_RH where RUN_NUMBER="+str(run_num)
-    cur.execute(query)
+        query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_DEAD_RH"
+        cur.execute(query)
 
-    deadStripsTablesPath = os.path.abspath("test_dashboard_data_pull.py").split('Py')[0] + '/Data/CSVs/'
-    outfile_name = deadStripsTablesPath + "Test_DeadStrips_run{0}.csv".format(run_num)
+        hotStripsTablesPath = os.path.abspath("test_Analyse.py").split('Py')[0] + '/Data/CSVs/'
+        outfile_name = hotStripsTablesPath + "Test_DeadStrips_allruns.csv"
 
-    with open(outfile_name,"w+") as outfile:
-        line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
-        outfile.write(line)
-        for result in cur:
-            chamber_name = result[0]
-            gem_num      = result[1]
-            position     = result[2]
-            vfat         = result[3]
-            channel      = result[4]
-            strip        = result[5]
-            run_number   = result[6]
-            line = str(chamber_name) + "," + str(gem_num) + "," + str(position) + "," + str(vfat) + "," + str(channel) + "," + str(strip) + "," + str(run_number) + "\n"
+        with open(outfile_name,"w+") as outfile:
+            line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
             outfile.write(line)
+            for result in cur:
+                chamber_name = result[0]
+                gem_num      = result[1]
+                position     = result[2]
+                vfat         = result[3]
+                channel      = result[4]
+                strip        = result[5]
+                run_number   = result[6]
+                line = str(chamber_name) + "," + str(gem_num) + "," + str(position) + "," + str(vfat) + "," + str(channel) + "," + str(strip) + "," + str(run_number) + "\n"
+                outfile.write(line)
 
-    print "\nSuccesfully done!\n"
+        print "\nSuccesfully done!\n"
+    else:
+        print "\nDownloading DeadStripsTable for run {0}".format(run_num)
+
+        db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
+        cur = db.cursor()
+
+        query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_DEAD_RH where RUN_NUMBER="+str(run_num)
+        cur.execute(query)
+
+        deadStripsTablesPath = os.path.abspath("test_Analyse.py").split('Py')[0] + '/Data/CSVs/'
+        outfile_name = deadStripsTablesPath + "Test_DeadStrips_run{0}.csv".format(run_num)
+
+        with open(outfile_name,"w+") as outfile:
+            line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
+            outfile.write(line)
+            for result in cur:
+                chamber_name = result[0]
+                gem_num      = result[1]
+                position     = result[2]
+                vfat         = result[3]
+                channel      = result[4]
+                strip        = result[5]
+                run_number   = result[6]
+                line = str(chamber_name) + "," + str(gem_num) + "," + str(position) + "," + str(vfat) + "," + str(channel) + "," + str(strip) + "," + str(run_number) + "\n"
+                outfile.write(line)
+
+        print "\nSuccesfully done!\n"
+
+## following block is for analysis
 
 def AnalyseFastEfficiencyTable(run_num):
     getFastEfficiencyTable(run_num)
@@ -141,9 +200,12 @@ def AnalyseVFATEfficiencyTable(run_num):
     time.sleep(1)
 
 def AnalyseHotStripsTable(run_num):
+
+    if run_num=="a":
+        run_num=int(-1)
     getHotStripsTable(run_num)
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
-    effCommand = "root -l -q " + runPath + "Analysis_HotStripsTable.cc(" + run_num + ")"
+    effCommand = "root -l -q " + runPath + "Analysis_HotStripsTable.cc(" + str(run_num) + ")"
     efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
     while efficiency.poll() is None:
         line = efficiency.stdout.readline()
@@ -169,6 +231,8 @@ def AnalyseAll(run_num):
     AnalyseVFATEfficiencyTable(run_num)
     AnalyseHotStripsTable(run_num)
     AnalyseDeadStripsTable(run_num)
+
+
 
 if __name__ == '__main__':
     runNumber = sys.argv[1]
