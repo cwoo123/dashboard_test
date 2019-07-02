@@ -83,8 +83,8 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     }
 
   DeadStripsTable->Write("DeadStripsTable");
-  runmax = *max_element(runvec.begin(), runvec.end());
-  Double_t maxedge = runmax+0.5;
+  runmax = *max_element(runvec.begin(), runvec.end()); // sets num bins to the max run in the entire DB; try set to max run per CHAMBER instead
+  Double_t maxedge = runmax+0.5; // sets edge to max run +0.5 in the entire DB; try set to max run per CHAMBER instead
 
   // create and fill eta histograms for each chamber
   fin.open(dir);
