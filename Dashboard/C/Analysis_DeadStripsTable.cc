@@ -21,15 +21,27 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
   TH1F *h[15]; // declare 15 element array for each s-chamber histo
   char *chamber = new char[100]; // for histo names
   char *description = new char[100]; // human readable name to the histograms
-  string ch_name;
+  string ch_name, outfile;
+  TH1F *DeadStripsTable;
   int data;
 
-  string outfile = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/Roots/DeadStripsTable_run" + to_string(run_num) +".root";
-  TFile f(outfile.c_str(), "NEW");
+  if(run_num==-1){
+    cout<<"Analysing all runs"<<endl;
+    outfile = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/Roots/DeadStripsTable_allruns.root";
 
-  TH1F *DeadStripsTable = new TH1F("DeadStripsTable","No. of Chambers vs Number of Dead Strips",15,0.5,15.5);
-  dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_DeadStrips_run" + to_string(run_num) + ".csv";
-  fin.open(dir);
+    DeadStripsTable = new TH1F("All runs: DeadStripsTable","No. of Chambers vs Number of Dead Strips (summed over all runs)",15,0.5,15.5);
+    dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_DeadStrips_allruns.csv";
+    fin.open(dir);
+  }
+  else{
+    outfile = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/Roots/DeadStripsTable_run" + to_string(run_num) +".root";
+
+    DeadStripsTable = new TH1F("DeadStripsTable","No. of Chambers vs Number of Dead Strips",15,0.5,15.5);
+    dir = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/Data/CSVs/Test_DeadStrips_run" + to_string(run_num) + ".csv";
+    fin.open(dir);
+  }
+
+  TFile f(outfile.c_str(), "NEW");
 
   // get chamber s/n,
   while(getline(fin, line)){
@@ -104,5 +116,8 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     row_count=0; // reset row_count
   }
   f.Close();
-  cout<<"DeadStripsTable_run" + to_string(run_num) +".root created."<<endl;
+  if(run_num==-1)
+    cout<<"DeadStripsTable_allruns.root created."<<endl;
+  else
+    cout<<"DeadStripsTable_run" + to_string(run_num) +".root created."<<endl;
 }

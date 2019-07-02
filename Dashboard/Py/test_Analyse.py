@@ -200,10 +200,9 @@ def AnalyseVFATEfficiencyTable(run_num):
     time.sleep(1)
 
 def AnalyseHotStripsTable(run_num):
-
+    getHotStripsTable(run_num)
     if run_num=="a":
         run_num=int(-1)
-    getHotStripsTable(run_num)
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
     effCommand = "root -l -q " + runPath + "Analysis_HotStripsTable.cc(" + str(run_num) + ")"
     efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
@@ -215,9 +214,11 @@ def AnalyseHotStripsTable(run_num):
     time.sleep(1)
 
 def AnalyseDeadStripsTable(run_num):
-    getHotStripsTable(run_num)
+    getDeadStripsTable(run_num)
+    if run_num=="a":
+        run_num=int(-1)
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
-    effCommand = "root -l -q " + runPath + "Analysis_DeadStripsTable.cc(" + run_num + ")"
+    effCommand = "root -l -q " + runPath + "Analysis_DeadStripsTable.cc(" + str(run_num) + ")"
     efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
     while efficiency.poll() is None:
         line = efficiency.stdout.readline()
