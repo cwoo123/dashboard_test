@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstring>
 #include <TH1.h>
+#include <TH2.h>
 #include <TFile.h>
 #include <TCanvas.h>
 #include <stdio.h>
@@ -17,13 +18,18 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
   string dir, line, entry, name;
   int row_count = 0;
   int ch_count = -900;
+  int run = -1;
+  Int_t runmax = -1;
   vector<string> ch_ID, replic;
-  TH1F *h[15]; // declare 15 element array for each s-chamber histo
+  vector<int> runvec; //stores run numbers
+  TH1F *h[15]; // declare 15 element array for each s-chamber histo; 15 is max num of s-chambers in cosmic stand
+  TH2 *h2[15]; // declare 15 element array for 2D histos per chamber
   char *chamber = new char[100]; // for histo names
   char *description = new char[100]; // human readable name to the histograms
+  char *description2d = new char[100]; // human readable name to the histograms
   string ch_name, outfile;
   TH1F *DeadStripsTable;
-  int data;
+  int data, datay;
 
   if(run_num==-1){
     cout<<"Analysing all runs"<<endl;
@@ -54,6 +60,10 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
       column_count+=1;
       if(column_count==1) // get chamber names into vector
         ch_ID.push_back(entry);
+      if(column_count==7){ // get run numbers into vector
+        run=stoi(entry);
+        runvec.push_back(run);
+      }
     }
   }
 
@@ -72,7 +82,9 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     DeadStripsTable->Fill(ch_count);
     }
 
-    DeadStripsTable->Write("DeadStripsTable");
+  DeadStripsTable->Write("DeadStripsTable");
+  runmax = *max_element(runvec.begin(), runvec.end());
+  Double_t maxedge = runmax+0.5;
 
   // create and fill eta histograms for each chamber
   fin.open(dir);
@@ -80,6 +92,8 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     strcpy(chamber, replic.at(i).c_str());
     strcpy(description, (replic.at(i) + ": Number of Dead Strips per Eta").c_str());
     h[i] = new TH1F(chamber, description, 8, 0.5, 8.5);
+    strcpy(description2d, (replic.at(i) + ": Number of Dead Strips per Eta, per Run").c_str());
+    h2[i] = new TH2F(chamber, description2d, 8, 0.5, 8.5,runmax,0.5,maxedge); // error, fill in numofbins line 93
 
     while(getline(fin, line)){
       int column_count = 0;
@@ -104,14 +118,28 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
           if(ch_name==replic.at(i)){ // if row corresponds to chamber, read data
             data = stoi(entry);
             data = 8-data%8; // obtain eta_ID
-            h[i]->Fill(data); // fill with eta_IDs
+            if(run_num!=-1)
+              h[i]->Fill(data); // fill with eta_IDs
+          }
+        }
+        if(column_count==7 && run_num==-1){
+          if(ch_name==replic.at(i)){ // if row corresponds to chamber, read data
+            datay = stoi(entry); // run number
+            h2[i]->Fill(data,datay);
           }
         }
       }
     }
-
     fin.close();
-    h[i]->Write(chamber);
+    if(run_num==-1){
+      h2[i]->SetOption("lego");
+      h2[i]->SetXTitle("Eta");
+      h2[i]->SetYTitle("Run Number");
+      h2[i]->SetZTitle("Dead Strip Count");
+      h2[i]->Write(chamber);
+    }
+    else
+      h[i]->Write(chamber);
     fin.open(dir);  // re-open
     row_count=0; // reset row_count
   }
