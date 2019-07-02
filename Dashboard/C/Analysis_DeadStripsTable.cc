@@ -1,5 +1,3 @@
-// Running this as a macro to test its functionality
-
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -49,7 +47,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
 
   TFile f(outfile.c_str(), "NEW");
 
-  // get chamber s/n,
+  // get chamber s/n and run numbers in the DB
   while(getline(fin, line)){
     int column_count = 0;
     row_count+=1;
@@ -67,7 +65,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     }
   }
 
-  row_count=0; //reset
+  row_count=0; //reset for use below
   fin.close();
 
   //draw summary plot for No. of VFAT vs No. of Deads
@@ -83,47 +81,50 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     }
 
   DeadStripsTable->Write("DeadStripsTable");
+
   runmax = *max_element(runvec.begin(), runvec.end()); // sets num bins to the max run in the entire DB; try set to max run per CHAMBER instead
   Double_t maxedge = runmax+0.5; // sets edge to max run +0.5 in the entire DB; try set to max run per CHAMBER instead
 
   // create and fill eta histograms for each chamber
   fin.open(dir);
   for(int i = 0; i<replic.size(); i++ ){
+
     strcpy(chamber, replic.at(i).c_str());
     strcpy(description, (replic.at(i) + ": Number of Dead Strips per Eta").c_str());
     h[i] = new TH1F(chamber, description, 8, 0.5, 8.5);
+
     strcpy(description2d, (replic.at(i) + ": Number of Dead Strips per Eta, per Run").c_str());
     h2[i] = new TH2F(chamber, description2d, 8, 0.5, 8.5,runmax,0.5,maxedge); // error, fill in numofbins line 93
 
     while(getline(fin, line)){
       int column_count = 0;
-      row_count+=1; // call values r
+      row_count+=1;
       stringstream s(line);
 
       while(getline(s,entry,',')){
 
         if(row_count==1) // skips loop when entries are column names
           break;
-        column_count+=1; // call values c
+        column_count+=1;
 
-        if(column_count==1){
+        if(column_count==1){ // column for chamber names
           if(entry==replic.at(i)){
-            ch_name = entry; // stores "entry" as ch_name for comparison if entry(r,1) == replic[i]
+            ch_name = entry; // stores "entry" as ch_name for comparison if entry(row_count,1) == replic[i]
           }
           if(entry!=replic.at(i)){
-            ch_name = " "; // assign some other string if entry(r,1) doesn't correspond
+            ch_name = " "; // assign some other string if entry(row_count,1) doesn't correspond
           }
         }
         if(column_count==4){
-          if(ch_name==replic.at(i)){ // if row corresponds to chamber, read data
+          if(ch_name==replic.at(i)){ // if row corresponds to right chamber, read data
             data = stoi(entry);
             data = 8-data%8; // obtain eta_ID
             if(run_num!=-1)
               h[i]->Fill(data); // fill with eta_IDs
           }
         }
-        if(column_count==7 && run_num==-1){
-          if(ch_name==replic.at(i)){ // if row corresponds to chamber, read data
+        if(column_count==7 && run_num==-1){ // for analysis of all runs
+          if(ch_name==replic.at(i)){ // if row corresponds to right chamber, read data
             datay = stoi(entry); // run number
             h2[i]->Fill(data,datay);
           }
@@ -144,6 +145,7 @@ void Analysis_DeadStripsTable(int run_num){ // test before adding analysis_dead
     row_count=0; // reset row_count
   }
   f.Close();
+
   if(run_num==-1)
     cout<<"DeadStripsTable_allruns.root created."<<endl;
   else
