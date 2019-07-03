@@ -13,18 +13,26 @@ def getFastEfficiencyTable(run_num):
     configTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/' #???
     outfile_name = configTablesPath + "Test_FastEfficiencyTable_run{0}.csv".format(run_num) # ???
 
-    with open(outfile_name,"w+") as outfile:
-        line = "CHAMBER_NAME,OVERALL_EFFICIENCY,ERROR_EFFICIENCY,RUN_NUMBER\n"
-        outfile.write(line)
-        for result in cur:
-            chamber_name           = result[0]
-            overall_efficiency     = result[1]
-            error_efficiency       = result[2]
-            run_number             = result[3]
-            line = str(chamber_name) + "," + str(overall_efficiency) + "," + str(error_efficiency) + "," + str(run_number)  + "\n"
-            outfile.write(line)
+    counter = 0
+    for result in cur:
+        counter = counter + 1
 
-    print "\nSuccesfully done!\n"
+    if counter == 0:
+        print "\nFAST EFFICIENCY DATA FROM RUN {0} DOES NOT EXIST \n \n".format(run_num)
+        return 0
+    else:
+        cur.execute(query)
+        with open(outfile_name,"w+") as outfile:
+            line = "CHAMBER_NAME,OVERALL_EFFICIENCY,ERROR_EFFICIENCY,RUN_NUMBER\n"
+            outfile.write(line)
+            for result in cur:
+                chamber_name           = result[0]
+                overall_efficiency     = result[1]
+                error_efficiency       = result[2]
+                run_number             = result[3]
+                line = str(chamber_name) + "," + str(overall_efficiency) + "," + str(error_efficiency) + "," + str(run_number)  + "\n"
+                outfile.write(line)
+        print "\nSuccesfully done!\n"
 
 def getVFATTable(run_num):
     print "\nDownloading VFATEfficiencyTable for run {0}".format(run_num)
@@ -38,25 +46,33 @@ def getVFATTable(run_num):
     configTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/' #???
     outfile_name = configTablesPath + "Test_VFATEfficiencyTable_run{0}.csv".format(run_num) # ???
 
-    with open(outfile_name,"w+") as outfile:
-        line = "CHAMBER_NAME,VFAT_POSN,EFFICIENCY,EFFICIENCY_ERROR,CLUSTER_SIZE_AVG,CLUSTER_SIZE_SIGMA,PERCENT_MASKED,RUN_NUMBER,RUN_BEGIN,RUN_END\n"
-        outfile.write(line)
-        for result in cur:
-            chamber_name        = result[0]
-            vfat_posn           = result[1]
-            efficiency          = result[2]
-            efficiency_error    = result[3]
-            cluster_size_avg    = result[4]
-            cluster_size_sigma  = result[5]
-            percent_masked      = result[6]
-            run_number          = result[7]
-            run_begin           = result[8]
-            run_end             = result[9]
-            line = str(chamber_name) + "," + str(vfat_posn) + "," + str(efficiency) + "," + str(efficiency_error)  + "," + str(cluster_size_avg) + \
-                    "," + str(cluster_size_sigma) + "," + str(percent_masked) + "," + str(run_number) + "," + str(run_begin) + "," + str(run_end) + "\n"
-            outfile.write(line)
+    counter = 0
+    for result in cur:
+        counter = counter + 1
 
-    print "\nSuccesfully done!\n"
+    if counter == 0:
+        print "\nVFAT EFFICIENCY DATA FROM RUN {0} DOES NOT EXIST \n \n".format(run_num)
+        return 0
+    else:
+        cur.execute(query)
+        with open(outfile_name,"w+") as outfile:
+            line = "CHAMBER_NAME,VFAT_POSN,EFFICIENCY,EFFICIENCY_ERROR,CLUSTER_SIZE_AVG,CLUSTER_SIZE_SIGMA,PERCENT_MASKED,RUN_NUMBER,RUN_BEGIN,RUN_END\n"
+            outfile.write(line)
+            for result in cur:
+                chamber_name        = result[0]
+                vfat_posn           = result[1]
+                efficiency          = result[2]
+                efficiency_error    = result[3]
+                cluster_size_avg    = result[4]
+                cluster_size_sigma  = result[5]
+                percent_masked      = result[6]
+                run_number          = result[7]
+                run_begin           = result[8]
+                run_end             = result[9]
+                line = str(chamber_name) + "," + str(vfat_posn) + "," + str(efficiency) + "," + str(efficiency_error)  + "," + str(cluster_size_avg) + \
+                        "," + str(cluster_size_sigma) + "," + str(percent_masked) + "," + str(run_number) + "," + str(run_begin) + "," + str(run_end) + "\n"
+                outfile.write(line)
+        print "\nSuccesfully done!\n"
 
 def getHotStripsTable(run_num):
 
@@ -77,8 +93,18 @@ def getHotStripsTable(run_num):
         query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_HOT_V_RH where RUN_NUMBER="+str(run_num)
         cur.execute(query)
 
+        counter = 0
+        for result in cur:
+            counter = counter + 1
+
+        if counter == 0:
+            print "\nHOT STRIPS DATA FROM RUN {0} DOES NOT EXIST \n \n".format(run_num)
+            return 0
+
+        cur.execute(query)
         hotStripsTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/'
         outfile_name = hotStripsTablesPath + "Test_HotStrips_run{0}.csv".format(run_num)
+
 
     with open(outfile_name,"w+") as outfile:
         line = "CH_SERIAL_NUMBER,GEM_NUMBER,POSITION,VFAT,CHANNEL,STRIP,RUN_NUMBER\n"
@@ -115,6 +141,15 @@ def getDeadStripsTable(run_num):
         query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_MASKED_STRIPS_DEAD_RH where RUN_NUMBER="+str(run_num)
         cur.execute(query)
 
+        counter = 0
+        for result in cur:
+            counter = counter + 1
+
+        if counter == 0:
+            print "\nDEAD STRIPS DATA FROM RUN {0} DOES NOT EXIST \n \n".format(run_num)
+            return 0
+
+        cur.execute(query)
         deadStripsTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/'
         outfile_name = deadStripsTablesPath + "Test_DeadStrips_run{0}.csv".format(run_num)
 
@@ -138,7 +173,8 @@ def getDeadStripsTable(run_num):
 ## following block is for analysis
 
 def AnalyseFastEfficiencyTable(run_num):
-    getFastEfficiencyTable(run_num)
+    if getFastEfficiencyTable(run_num)==0:
+        return 0
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
     effCommand = "root -l -q " + runPath + "Analysis_FastEfficiencyTable.cc(" + run_num + ")"
     efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
@@ -150,7 +186,8 @@ def AnalyseFastEfficiencyTable(run_num):
     time.sleep(1)
 
 def AnalyseVFATEfficiencyTable(run_num):
-    getVFATTable(run_num)
+    if getVFATTable(run_num)==0:
+        return 0
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
     effCommand = "root -l -q " + runPath + "Analysis_VFATEfficiencyTable.cc(" + run_num + ")"
     efficiency = subprocess.Popen(effCommand.split(),stdout=subprocess.PIPE,universal_newlines=True,cwd=runPath)
@@ -162,7 +199,8 @@ def AnalyseVFATEfficiencyTable(run_num):
     time.sleep(1)
 
 def AnalyseHotStripsTable(run_num):
-    getHotStripsTable(run_num)
+    if getHotStripsTable(run_num)==0:
+        return 0
     if run_num=="a":
         run_num=int(-1)
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
@@ -176,7 +214,8 @@ def AnalyseHotStripsTable(run_num):
     time.sleep(1)
 
 def AnalyseDeadStripsTable(run_num):
-    getDeadStripsTable(run_num)
+    if getDeadStripsTable(run_num)==0:
+        return 0
     if run_num=="a":
         run_num=int(-1)
     runPath = "/afs/cern.ch/user/c/cwoo/dashboard_test/Dashboard/C/"
@@ -191,21 +230,27 @@ def AnalyseDeadStripsTable(run_num):
 
 def PullAll(run_num):
     print "\n Pulling all data from run {0}.".format(run_num)
-    getFastEfficiencyTable(run_num)
-    getVFATTable(run_num)
-    getHotStripsTable(run_num)
-    getDeadStripsTable(run_num)
+    a = getFastEfficiencyTable(run_num)
+    b = getVFATTable(run_num)
+    c = getHotStripsTable(run_num)
+    d = getDeadStripsTable(run_num)
+    if a==0 or b==0 or c==0 or d==0:
+        print "\nSome run data does not exist\n"
+        return 0
     time.sleep(1)
-    print "All data from run {0} pulled.".format(run_num)
+    print "\nAll data from run {0} pulled. \n".format(run_num)
 
 def AnalyseAll(run_num):
     print "\n Analysing all data from run {0}.".format(run_num)
-    AnalyseFastEfficiencyTable(run_num)
-    AnalyseVFATEfficiencyTable(run_num)
-    AnalyseHotStripsTable(run_num)
-    AnalyseDeadStripsTable(run_num)
+    a = AnalyseFastEfficiencyTable(run_num)
+    b = AnalyseVFATEfficiencyTable(run_num)
+    c = AnalyseHotStripsTable(run_num)
+    d = AnalyseDeadStripsTable(run_num)
+    if a==0 or b==0 or c==0 or d==0:
+        print "\nSome run data does not exist\n"
+        return 0
     time.sleep(1)
-    print "All data from run {0} analysed.".format(run_num)
+    print "\nAll data from run {0} analysed.\n".format(run_num)
 
 if __name__ == '__main__':
     runNumber = sys.argv[1]
