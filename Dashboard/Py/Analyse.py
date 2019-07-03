@@ -7,11 +7,11 @@ def getFastEfficiencyTable(run_num):
     db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
     cur = db.cursor()
 
-    query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_QUICK_EFFICIENCY_V_RH where RUN_NUMBER="+str(run_num) # ???
+    query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_QUICK_EFFICIENCY_V_RH where RUN_NUMBER="+str(run_num)
     cur.execute(query)
 
-    configTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/' #???
-    outfile_name = configTablesPath + "Test_FastEfficiencyTable_run{0}.csv".format(run_num) # ???
+    configTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/'
+    outfile_name = configTablesPath + "Test_FastEfficiencyTable_run{0}.csv".format(run_num)
 
     counter = 0
     for result in cur:
@@ -40,11 +40,11 @@ def getVFATTable(run_num):
     db = cx_Oracle.connect('GEM_904_COND/904CondDB@INT2R')
     cur = db.cursor()
 
-    query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_CH_VFAT_EFF_VIEW_RH where RUN_NUMBER="+str(run_num) # ???
+    query = "select * from CMS_GEM_MUON_VIEW.QC8_GEM_CH_VFAT_EFF_VIEW_RH where RUN_NUMBER="+str(run_num)
     cur.execute(query)
 
-    configTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/' #???
-    outfile_name = configTablesPath + "Test_VFATEfficiencyTable_run{0}.csv".format(run_num) # ???
+    configTablesPath = os.path.abspath("Analyse.py").split('Py')[0] + '/Data/CSVs/'
+    outfile_name = configTablesPath + "Test_VFATEfficiencyTable_run{0}.csv".format(run_num) 
 
     counter = 0
     for result in cur:
