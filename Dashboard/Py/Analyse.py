@@ -1,5 +1,3 @@
-# remove test
-
 import cx_Oracle
 import os, sys, io, subprocess, time
 
@@ -227,13 +225,23 @@ def AnalyseDeadStripsTable(run_num):
     efficiency.communicate()
     time.sleep(1)
 
+def PullAll(run_num):
+    print "\n Pulling all data from run {0}.".format(run_num)
+    getFastEfficiencyTable(run_num)
+    getVFATTable(run_num)
+    getHotStripsTable(run_num)
+    getDeadStripsTable(run_num)
+    time.sleep(1)
+    print "All data from run {0} pulled.".format(run_num)
+
 def AnalyseAll(run_num):
+    print "\n Analysing all data from run {0}.".format(run_num)
     AnalyseFastEfficiencyTable(run_num)
     AnalyseVFATEfficiencyTable(run_num)
     AnalyseHotStripsTable(run_num)
     AnalyseDeadStripsTable(run_num)
-
-
+    time.sleep(1)
+    print "All data from run {0} analysed.".format(run_num)
 
 if __name__ == '__main__':
     runNumber = sys.argv[1]
@@ -254,8 +262,9 @@ if __name__ == '__main__':
         AnalyseHotStripsTable(runNumber)
     elif tableType == "AnalyseDeadStripsTable":
         AnalyseDeadStripsTable(runNumber)
+    elif tableType == "PullAll":
+        PullAll(runNumber)
     elif tableType == "AnalyseAll":
-        print "Analysing FastEff, VFATEff, HotStrips, DeadStrips"
         AnalyseAll(runNumber)
     else:
         print "Wrong name for a table!"
