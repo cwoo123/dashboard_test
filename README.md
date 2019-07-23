@@ -17,3 +17,4 @@ Analysis functions can
 Analyse data: write command line arguments as given in bottom of "Analyse.py"
 - for AnalyseHotStripsTable/AnalyseDeadStripsTable, if sys.argv[1] is given as "a", Hot/Dead strips data across all runs will be taken and analysed.
 - for PullAll/AnalyseAll, if sys.argv[1] is given as "n", all data (FastEff,VFATeff, etc) for run "n" will be pulled/analysed.
+- All data is saved in /Data/CSVs and root files are output into /Data/Roots
