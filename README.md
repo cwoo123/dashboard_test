@@ -1,5 +1,7 @@
 # dashboard_test
 
+FIXME: Change absolute paths in C++ files
+
 For FastEff, VFATEff, HotStrips, DeadStrips
 
 Data-pulling functions can
